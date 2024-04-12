@@ -1,9 +1,28 @@
-// require("dotenv").config(); -> will work but not consistent with our code
-import dotenv from "dotenv";
-dotenv.config({
-    path: "./env"
-});
+// require("dotenv").config(); 
+// import dotenv from "dotenv";
+// dotenv.config({
+//     path: "./env"
+// });
+import dotenv from 'dotenv';
+dotenv.config();
+
 import connectDB from "./db/connect.js";
+import {app} from "./app.js";
+
+connectDB()
+.then(() => {
+    app.on("error", (error)=>{
+        console.log("Error connecting to the database: ", error)
+        throw error
+    })
+    
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running on port ${process.env.PORT}`)
+    })
+})
+.catch((err) => {
+    console.log("mongoDB connection failed", err);
+})
 
 
 
